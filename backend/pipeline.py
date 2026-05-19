@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import importlib
 import inspect
+import asyncio
 import operator
 import warnings
 from datetime import datetime
@@ -33,6 +34,7 @@ from backend.schemas import (
     OverlapReport,
     Paper,
     ParsedHypothesis,
+    RetrievalReport,
     Scorecard,
     StrategyMemo,
     Variant,
@@ -58,6 +60,7 @@ class PipelineState(TypedDict, total=False):
     information_cutoff_year: Optional[int]
     backtest_metadata: Optional[dict]
     openalex_total_count: Optional[int]
+    retrieval_report: Optional[RetrievalReport]
 
 
 PartialState = dict[str, Any]
@@ -133,7 +136,7 @@ async def impact_forecaster(state: PipelineState) -> PartialState:
     if "forecast" in result and "metric_scores" not in result:
         result = {
             **result,
-            "metric_scores": _impact_metric_scores(result["forecast"]),
+            "metric_scores": _impact_metric_scores(result["forecast"], state),
         }
     return result
 
@@ -224,14 +227,79 @@ def build_graph():
     return graph.compile()
 
 
-async def run_pipeline(raw_hypothesis: str) -> PipelineState:
+async def run_pipeline(
+    raw_hypothesis: str,
+    *,
+    information_cutoff_year: Optional[int] = None,
+    backtest_metadata: Optional[dict] = None,
+) -> PipelineState:
     app = build_graph()
-    initial_state: PipelineState = {
+    initial_state = _initial_state(
+        raw_hypothesis,
+        information_cutoff_year=information_cutoff_year,
+        backtest_metadata=backtest_metadata,
+    )
+    return await app.ainvoke(initial_state)
+
+
+async def run_scorecard_pipeline(
+    raw_hypothesis: str,
+    *,
+    information_cutoff_year: Optional[int] = None,
+    backtest_metadata: Optional[dict] = None,
+) -> PipelineState:
+    state = _initial_state(
+        raw_hypothesis,
+        information_cutoff_year=information_cutoff_year,
+        backtest_metadata=backtest_metadata,
+    )
+
+    for node in (parser, cartographer):
+        _merge_partial_state(state, await node(state))
+
+    metric_results = await asyncio.gather(
+        novelty_scorer(state),
+        saturation_scorer(state),
+        conflict_scorer(state),
+        feasibility_scorer(state),
+        impact_forecaster(state),
+        evidence_quality_scorer(state),
+    )
+    for result in metric_results:
+        _merge_partial_state(state, result)
+
+    _merge_partial_state(state, await score_aggregator(state))
+    return state
+
+
+def _initial_state(
+    raw_hypothesis: str,
+    *,
+    information_cutoff_year: Optional[int] = None,
+    backtest_metadata: Optional[dict] = None,
+) -> PipelineState:
+    state: PipelineState = {
         "raw_hypothesis": raw_hypothesis,
         "metric_scores": [],
         "rescored_variants": [],
     }
-    return await app.ainvoke(initial_state)
+    if information_cutoff_year is not None:
+        state["information_cutoff_year"] = information_cutoff_year
+    if backtest_metadata is not None:
+        state["backtest_metadata"] = backtest_metadata
+    return state
+
+
+def _merge_partial_state(state: PipelineState, update: PartialState) -> None:
+    for key, value in update.items():
+        if key == "metric_scores":
+            state.setdefault("metric_scores", [])
+            state["metric_scores"].extend(value or [])
+        elif key == "rescored_variants":
+            state.setdefault("rescored_variants", [])
+            state["rescored_variants"].extend(value or [])
+        else:
+            state[key] = value
 
 
 def _dispatch_variant_rescorers(state: PipelineState) -> list[Send]:
@@ -249,6 +317,9 @@ def _dispatch_variant_rescorers(state: PipelineState) -> list[Send]:
                 "scorecard": state["scorecard"],
                 "variants": state.get("variants", []),
                 "current_variant": variant,
+                "information_cutoff_year": state.get("information_cutoff_year"),
+                "backtest_metadata": state.get("backtest_metadata"),
+                "retrieval_report": state.get("retrieval_report"),
             },
         )
         for variant in state.get("variants", [])
@@ -818,14 +889,19 @@ def _impact_dimension(score: int, rationale: str) -> ImpactDimension:
     )
 
 
-def _impact_metric_scores(forecast: ImpactForecast) -> list[MetricScore]:
+def _impact_metric_scores(forecast: ImpactForecast, state: PipelineState | None = None) -> list[MetricScore]:
+    evidence_ids = [
+        _paper_evidence_id(paper)
+        for paper in (state or {}).get("papers", [])[:6]
+        if isinstance(paper, Paper)
+    ]
     return [
-        _metric("volume", forecast.volume.score, forecast.volume.rationale),
-        _metric("velocity", forecast.velocity.score, forecast.velocity.rationale),
-        _metric("reach", forecast.reach.score, forecast.reach.rationale),
-        _metric("depth", forecast.depth.score, forecast.depth.rationale),
-        _metric("disruption", forecast.disruption.score, forecast.disruption.rationale),
-        _metric("translation", forecast.translation.score, forecast.translation.rationale),
+        _metric("volume", forecast.volume.score, forecast.volume.rationale, evidence_ids, method="forecast:volume_v1"),
+        _metric("velocity", forecast.velocity.score, forecast.velocity.rationale, evidence_ids, method="forecast:velocity_v1"),
+        _metric("reach", forecast.reach.score, forecast.reach.rationale, evidence_ids, method="forecast:reach_v1"),
+        _metric("depth", forecast.depth.score, forecast.depth.rationale, evidence_ids, method="forecast:depth_v1"),
+        _metric("disruption", forecast.disruption.score, forecast.disruption.rationale, evidence_ids, method="forecast:disruption_v1"),
+        _metric("translation", forecast.translation.score, forecast.translation.rationale, evidence_ids, method="forecast:translation_v1"),
     ]
 
 

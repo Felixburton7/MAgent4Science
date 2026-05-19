@@ -2,7 +2,8 @@ from __future__ import annotations
 
 from typing import Any
 
-from backend.schemas import MetricScore, Scorecard, Variant
+from backend.evidence_utils import paper_evidence_id
+from backend.schemas import ImpactForecast, MetricScore, Scorecard, Variant
 
 
 METRIC_WEIGHTS = {
@@ -41,6 +42,15 @@ TARGETS = {
 
 
 async def variant_rescorer(state: dict[str, Any]) -> dict[str, list[Variant]]:
+    variant = state["current_variant"]
+    try:
+        rescored = await _real_rescore_variant(variant, state)
+        return {"rescored_variants": [rescored]}
+    except Exception:
+        return _heuristic_rescore_variant(state)
+
+
+async def _heuristic_rescore_variant(state: dict[str, Any]) -> dict[str, list[Variant]]:
     variant = state["current_variant"]
     original_metrics = _metric_map(state.get("scorecard"), state.get("metric_scores", []))
     weak_metrics = {name for name, metric in original_metrics.items() if metric.score < 58}
@@ -106,6 +116,91 @@ async def variant_rescorer(state: dict[str, Any]) -> dict[str, list[Variant]]:
 
 
 run = variant_rescorer
+
+
+async def _real_rescore_variant(variant: Variant, state: dict[str, Any]) -> Variant:
+    from backend import (
+        cartographer,
+        conflict_scorer,
+        evidence_quality_scorer,
+        feasibility_scorer,
+        impact_forecaster,
+        novelty_scorer,
+        parser,
+        saturation_scorer,
+        score_aggregator,
+    )
+
+    variant_state: dict[str, Any] = {
+        "raw_hypothesis": variant.hypothesis_text,
+        "metric_scores": [],
+    }
+    for key in ("information_cutoff_year", "backtest_metadata"):
+        if state.get(key) is not None:
+            variant_state[key] = state[key]
+
+    for node in (parser.run, cartographer.run):
+        _merge_result(variant_state, await node(variant_state))
+
+    for scorer in (
+        novelty_scorer.run,
+        saturation_scorer.run,
+        conflict_scorer.run,
+        feasibility_scorer.run,
+        evidence_quality_scorer.run,
+    ):
+        _merge_result(variant_state, await scorer(variant_state))
+
+    impact_result = await impact_forecaster.run(variant_state)
+    _merge_result(variant_state, impact_result)
+    forecast = variant_state.get("forecast")
+    if isinstance(forecast, ImpactForecast):
+        variant_state["metric_scores"].extend(_forecast_metric_scores(forecast, variant_state))
+
+    _merge_result(variant_state, await score_aggregator.run(variant_state))
+    scorecard = variant_state["scorecard"]
+    score_values = {
+        metric.name: metric.score
+        for metric in scorecard.metric_scores
+    }
+    score_values["composite"] = int(scorecard.composite_score)
+
+    return _copy_model(
+        variant,
+        operator=_normalise_operator(variant.operator),
+        composite_score=scorecard.composite_score,
+        impact_scores=score_values,
+        scorecard=scorecard,
+    )
+
+
+def _merge_result(target: dict[str, Any], update: dict[str, Any]) -> None:
+    for key, value in update.items():
+        if key == "metric_scores":
+            target.setdefault("metric_scores", [])
+            target["metric_scores"].extend(value or [])
+        else:
+            target[key] = value
+
+
+def _forecast_metric_scores(forecast: ImpactForecast, state: dict[str, Any]) -> list[MetricScore]:
+    evidence_ids = [paper_evidence_id(paper) for paper in state.get("papers", [])[:6]]
+    metrics: list[MetricScore] = []
+    for name in ("volume", "velocity", "reach", "depth", "disruption", "translation"):
+        dimension = getattr(forecast, name)
+        metrics.append(
+            MetricScore(
+                name=name,
+                score=dimension.score,
+                confidence_low=dimension.confidence_low,
+                confidence_high=dimension.confidence_high,
+                rationale=dimension.rationale,
+                evidence_ids=evidence_ids,
+                method=f"forecast:{name}_v1",
+                weakness="" if dimension.score >= 55 else f"{name} remains weak after mutation.",
+            )
+        )
+    return metrics
 
 
 def _metric_map(scorecard: Any, fallback_metrics: list[Any]) -> dict[str, MetricScore]:

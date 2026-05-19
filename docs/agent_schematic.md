@@ -26,8 +26,9 @@ flowchart TD
         variant_n["variant_rescorer\nvariant N"]
     end
 
-    ranker["7. ranker / pareto_curator"]
-    strategist["8. strategist"]
+    pareto["7. pareto_curator"]
+    ranker["8. ranker"]
+    strategist["9. strategist"]
     memo["Strategy memo"]
 
     hypothesis --> parser
@@ -52,10 +53,11 @@ flowchart TD
     mutator -. dynamic fan-out .-> variant_b
     mutator -. dynamic fan-out .-> variant_n
 
-    variant_a --> ranker
-    variant_b --> ranker
-    variant_n --> ranker
+    variant_a --> pareto
+    variant_b --> pareto
+    variant_n --> pareto
 
+    pareto --> ranker
     ranker --> strategist
     strategist --> memo
 ```
@@ -75,8 +77,9 @@ flowchart TD
 | 4 | `score_aggregator` | `metric_scores`, evidence objects | `scorecard` |
 | 5 | `mutator` | `raw_hypothesis`, `parsed`, `scorecard`, evidence | `variants` |
 | 6 | `variant_rescorer` | one `current_variant`, scorecard, evidence | `rescored_variants` |
-| 7 | `ranker` | `rescored_variants` or `variants` | `ranked_variants`, ranked `variants` |
-| 8 | `strategist` | full scored/ranked state | `final_memo` |
+| 7 | `pareto_curator` | `rescored_variants` or `variants` | `pareto_variants`, Pareto flags |
+| 8 | `ranker` | `pareto_variants` or `rescored_variants` | `ranked_variants`, ranked `variants` |
+| 9 | `strategist` | full scored/ranked state | `final_memo` |
 
 ## Parallelism
 
@@ -86,6 +89,7 @@ flowchart TD
 
 ## Current Implementation Status
 
-- `impact_forecaster` and `mutator` have real backend modules with deterministic fallback behavior.
-- Most other nodes still use pipeline stubs until real implementations land.
-- `cartographer` currently returns mock papers, so literature API calls are not yet on the critical path.
+- Core nodes have backend modules with deterministic fallback behavior where external services or API keys are unavailable.
+- `cartographer` queries OpenAlex and Semantic Scholar, deduplicates DOI/OpenAlex/S2 IDs, and returns a `retrieval_report` with source errors and cutoff status.
+- `variant_rescorer` runs the scorer stack for each generated variant, falling back to the older operator-delta heuristic only when a variant pass fails.
+- Group emulation remains outside this critical path.

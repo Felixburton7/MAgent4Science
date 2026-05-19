@@ -29,6 +29,21 @@ class Paper(BaseModel):
     source_provenance: List[str] = Field(default_factory=list)
 
 
+class SourceError(BaseModel):
+    source: str
+    query: str = ""
+    error: str
+
+
+class RetrievalReport(BaseModel):
+    status: Literal["ok", "partial", "no_results", "failed"]
+    attempted_queries: List[str] = Field(default_factory=list)
+    source_errors: List[SourceError] = Field(default_factory=list)
+    cutoff_year: Optional[int] = None
+    paper_count: int = Field(default=0, ge=0)
+    openalex_total_count: int = Field(default=0, ge=0)
+
+
 class Conflict(BaseModel):
     paper_id: str
     title: str

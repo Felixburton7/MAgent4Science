@@ -13,6 +13,7 @@ import {
   SimilarLandscape,
   Logo,
 } from "@/components/Scorecard";
+import BacktestCorner from "@/components/BacktestCorner";
 import type { DemoState } from "@/types/schemas";
 
 export default function Home() {
@@ -342,6 +343,22 @@ function Scorecard() {
             {scorecardData.suggestions.map((s, i) => (
               <SuggestionCard key={i} index={i + 1} {...s} />
             ))}
+          </div>
+        </section>
+
+        <section className="panel p-5 mb-4">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h3 className="text-[15px] font-bold text-[color:var(--color-ink)] tracking-tight">
+                Historical backtest
+              </h3>
+              <p className="text-[11.5px] text-[color:var(--color-muted)]">
+                Saved 2018-to-2024 Spearman correlations from the repository output.
+              </p>
+            </div>
+          </div>
+          <div className="h-[260px]">
+            <BacktestCorner />
           </div>
         </section>
 

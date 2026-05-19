@@ -1,29 +1,29 @@
 [
   {
-    "date_filtering": "Prediction inputs include only title, abstract, authors, venue, concepts, and references available in 2018. Citation outcomes are stored separately and are not passed to the forecaster.",
+    "date_filtering": "Prediction inputs include only the focal title and abstract as the pre-publication hypothesis. Literature retrieval is restricted to evidence available through 2017. Citation outcomes are stored separately and are not passed to the pipeline.",
     "ground_truth": {
-      "citations_at_1y": 1729,
+      "citations_at_1y": 1730,
       "citations_by_year": {
         "2012": 2,
         "2013": 1,
         "2016": 1,
         "2017": 7,
         "2018": 35,
-        "2019": 1694,
+        "2019": 1695,
         "2020": 4403,
         "2021": 7234,
-        "2022": 8074,
+        "2022": 8075,
         "2023": 11164,
         "2024": 8088
       },
-      "citations_first_24_months": 1729,
+      "citations_first_24_months": 1730,
       "citing_paper_h_index_proxy": 119,
       "citing_review_count": 28,
       "citing_works_sampled": 120,
       "depth_proxy": 175,
       "disruption_proxy": -0.5166666666666667,
       "distinct_citing_concepts": 483,
-      "total_citations_2024": 40703,
+      "total_citations_2024": 40705,
       "translation_citation_proxy": 9
     },
     "ground_truth_year": 2024,
@@ -61,7 +61,7 @@
     "prediction_cutoff_year": 2018
   },
   {
-    "date_filtering": "Prediction inputs include only title, abstract, authors, venue, concepts, and references available in 2018. Citation outcomes are stored separately and are not passed to the forecaster.",
+    "date_filtering": "Prediction inputs include only the focal title and abstract as the pre-publication hypothesis. Literature retrieval is restricted to evidence available through 2017. Citation outcomes are stored separately and are not passed to the pipeline.",
     "ground_truth": {
       "citations_at_1y": 51,
       "citations_by_year": {
@@ -79,7 +79,7 @@
       "citing_works_sampled": 120,
       "depth_proxy": 60,
       "disruption_proxy": -0.9333333333333333,
-      "distinct_citing_concepts": 386,
+      "distinct_citing_concepts": 383,
       "total_citations_2024": 189,
       "translation_citation_proxy": 5
     },
@@ -121,14 +121,14 @@
     "prediction_cutoff_year": 2018
   },
   {
-    "date_filtering": "Prediction inputs include only title, abstract, authors, venue, concepts, and references available in 2018. Citation outcomes are stored separately and are not passed to the forecaster.",
+    "date_filtering": "Prediction inputs include only the focal title and abstract as the pre-publication hypothesis. Literature retrieval is restricted to evidence available through 2017. Citation outcomes are stored separately and are not passed to the pipeline.",
     "ground_truth": {
       "citations_at_1y": 84,
       "citations_by_year": {
         "2018": 11,
         "2019": 73,
         "2020": 206,
-        "2021": 406,
+        "2021": 407,
         "2022": 486,
         "2023": 574,
         "2024": 495
@@ -140,7 +140,7 @@
       "depth_proxy": 77,
       "disruption_proxy": 0.21666666666666667,
       "distinct_citing_concepts": 833,
-      "total_citations_2024": 2251,
+      "total_citations_2024": 2252,
       "translation_citation_proxy": 29
     },
     "ground_truth_year": 2024,
@@ -177,7 +177,7 @@
     "prediction_cutoff_year": 2018
   },
   {
-    "date_filtering": "Prediction inputs include only title, abstract, authors, venue, concepts, and references available in 2018. Citation outcomes are stored separately and are not passed to the forecaster.",
+    "date_filtering": "Prediction inputs include only the focal title and abstract as the pre-publication hypothesis. Literature retrieval is restricted to evidence available through 2017. Citation outcomes are stored separately and are not passed to the pipeline.",
     "ground_truth": {
       "citations_at_1y": 47,
       "citations_by_year": {
@@ -236,7 +236,7 @@
     "prediction_cutoff_year": 2018
   },
   {
-    "date_filtering": "Prediction inputs include only title, abstract, authors, venue, concepts, and references available in 2018. Citation outcomes are stored separately and are not passed to the forecaster.",
+    "date_filtering": "Prediction inputs include only the focal title and abstract as the pre-publication hypothesis. Literature retrieval is restricted to evidence available through 2017. Citation outcomes are stored separately and are not passed to the pipeline.",
     "ground_truth": {
       "citations_at_1y": 7,
       "citations_by_year": {
@@ -294,7 +294,7 @@
     "prediction_cutoff_year": 2018
   },
   {
-    "date_filtering": "Prediction inputs include only title, abstract, authors, venue, concepts, and references available in 2018. Citation outcomes are stored separately and are not passed to the forecaster.",
+    "date_filtering": "Prediction inputs include only the focal title and abstract as the pre-publication hypothesis. Literature retrieval is restricted to evidence available through 2017. Citation outcomes are stored separately and are not passed to the pipeline.",
     "ground_truth": {
       "citations_at_1y": 128,
       "citations_by_year": {
@@ -352,7 +352,7 @@
     "prediction_cutoff_year": 2018
   },
   {
-    "date_filtering": "Prediction inputs include only title, abstract, authors, venue, concepts, and references available in 2018. Citation outcomes are stored separately and are not passed to the forecaster.",
+    "date_filtering": "Prediction inputs include only the focal title and abstract as the pre-publication hypothesis. Literature retrieval is restricted to evidence available through 2017. Citation outcomes are stored separately and are not passed to the pipeline.",
     "ground_truth": {
       "citations_at_1y": 200,
       "citations_by_year": {
@@ -414,7 +414,7 @@
     "prediction_cutoff_year": 2018
   },
   {
-    "date_filtering": "Prediction inputs include only title, abstract, authors, venue, concepts, and references available in 2018. Citation outcomes are stored separately and are not passed to the forecaster.",
+    "date_filtering": "Prediction inputs include only the focal title and abstract as the pre-publication hypothesis. Literature retrieval is restricted to evidence available through 2017. Citation outcomes are stored separately and are not passed to the pipeline.",
     "ground_truth": {
       "citations_at_1y": 44,
       "citations_by_year": {
@@ -473,7 +473,7 @@
     "prediction_cutoff_year": 2018
   },
   {
-    "date_filtering": "Prediction inputs include only title, abstract, authors, venue, concepts, and references available in 2018. Citation outcomes are stored separately and are not passed to the forecaster.",
+    "date_filtering": "Prediction inputs include only the focal title and abstract as the pre-publication hypothesis. Literature retrieval is restricted to evidence available through 2017. Citation outcomes are stored separately and are not passed to the pipeline.",
     "ground_truth": {
       "citations_at_1y": 129,
       "citations_by_year": {
@@ -532,7 +532,7 @@
     "prediction_cutoff_year": 2018
   },
   {
-    "date_filtering": "Prediction inputs include only title, abstract, authors, venue, concepts, and references available in 2018. Citation outcomes are stored separately and are not passed to the forecaster.",
+    "date_filtering": "Prediction inputs include only the focal title and abstract as the pre-publication hypothesis. Literature retrieval is restricted to evidence available through 2017. Citation outcomes are stored separately and are not passed to the pipeline.",
     "ground_truth": {
       "citations_at_1y": 92,
       "citations_by_year": {
@@ -550,9 +550,9 @@
       "citing_works_sampled": 120,
       "depth_proxy": 66,
       "disruption_proxy": -0.7333333333333333,
-      "distinct_citing_concepts": 541,
+      "distinct_citing_concepts": 538,
       "total_citations_2024": 402,
-      "translation_citation_proxy": 13
+      "translation_citation_proxy": 12
     },
     "ground_truth_year": 2024,
     "metadata": {
@@ -591,7 +591,7 @@
     "prediction_cutoff_year": 2018
   },
   {
-    "date_filtering": "Prediction inputs include only title, abstract, authors, venue, concepts, and references available in 2018. Citation outcomes are stored separately and are not passed to the forecaster.",
+    "date_filtering": "Prediction inputs include only the focal title and abstract as the pre-publication hypothesis. Literature retrieval is restricted to evidence available through 2017. Citation outcomes are stored separately and are not passed to the pipeline.",
     "ground_truth": {
       "citations_at_1y": 37,
       "citations_by_year": {
@@ -605,9 +605,9 @@
       },
       "citations_first_24_months": 37,
       "citing_paper_h_index_proxy": 61,
-      "citing_review_count": 33,
+      "citing_review_count": 32,
       "citing_works_sampled": 120,
-      "depth_proxy": 127,
+      "depth_proxy": 125,
       "disruption_proxy": -0.8166666666666667,
       "distinct_citing_concepts": 345,
       "total_citations_2024": 571,
@@ -615,7 +615,7 @@
     },
     "ground_truth_year": 2024,
     "metadata": {
-      "abstract": "Motivation: Structure based ligand discovery is one of the most successful approaches for augmenting the drug discovery process. Currently, there is a notable shift towards machine learning (ML) methodologies to aid such procedures. Deep learning has recently gained considerable attention as it allows the model to 'learn' to extract features that are relevant for the task at hand. Results: We have developed a novel deep neural network estimating the binding affinity of ligand-receptor complexes. The complex is represented with a 3D grid, and the model utilizes a 3D convolution to produce a feature map of this representation, treating the atoms of both proteins and ligands in the same manner. Our network was tested on the CASF-2013 'scoring power' benchmark and Astex Diverse Set and outperformed classical scoring functions. Availability and implementation: The model, together with usage instructions and examples, is available as a git repository at http://gitlab.com/cheminfIBB/pafnucy. Supplementary information: Supplementary data are available at Bioinformatics online.",
+      "abstract": "Abstract Motivation Structure based ligand discovery is one of the most successful approaches for augmenting the drug discovery process. Currently, there is a notable shift towards machine learning (ML) methodologies to aid such procedures. Deep learning has recently gained considerable attention as it allows the model to \u2018learn\u2019 to extract features that are relevant for the task at hand. Results We have developed a novel deep neural network estimating the binding affinity of ligand\u2013receptor complexes. The complex is represented with a 3D grid, and the model utilizes a 3D convolution to produce a feature map of this representation, treating the atoms of both proteins and ligands in the same manner. Our network was tested on the CASF-2013 \u2018scoring power\u2019 benchmark and Astex Diverse Set and outperformed classical scoring functions. Availability and implementation The model, together with usage instructions and examples, is available as a git repository at http://gitlab.com/cheminfIBB/pafnucy. Supplementary information Supplementary data are available at Bioinformatics online.",
       "area": "bio",
       "authors": [
         "Marta M. Stepniewska-Dziubinska",
@@ -649,7 +649,7 @@
     "prediction_cutoff_year": 2018
   },
   {
-    "date_filtering": "Prediction inputs include only title, abstract, authors, venue, concepts, and references available in 2018. Citation outcomes are stored separately and are not passed to the forecaster.",
+    "date_filtering": "Prediction inputs include only the focal title and abstract as the pre-publication hypothesis. Literature retrieval is restricted to evidence available through 2017. Citation outcomes are stored separately and are not passed to the pipeline.",
     "ground_truth": {
       "citations_at_1y": 24,
       "citations_by_year": {
@@ -666,14 +666,14 @@
       "citing_review_count": 30,
       "citing_works_sampled": 120,
       "depth_proxy": 98,
-      "disruption_proxy": -0.4166666666666667,
-      "distinct_citing_concepts": 547,
+      "disruption_proxy": -0.4,
+      "distinct_citing_concepts": 546,
       "total_citations_2024": 197,
       "translation_citation_proxy": 44
     },
     "ground_truth_year": 2024,
     "metadata": {
-      "abstract": "Motivation: Protein solubility plays a vital role in pharmaceutical research and production yield. For a given protein, the extent of its solubility can represent the quality of its function, and is ultimately defined by its sequence. Thus, it is imperative to develop novel, highly accurate in silico sequence-based protein solubility predictors. In this work we propose, DeepSol, a novel Deep Learning-based protein solubility predictor. The backbone of our framework is a convolutional neural network that exploits k-mer structure and additional sequence and structural features extracted from the protein sequence. Results: DeepSol outperformed all known sequence-based state-of-the-art solubility prediction methods and attained an accuracy of 0.77 and Matthew's correlation coefficient of 0.55. The superior prediction accuracy of DeepSol allows to screen for sequences with enhanced production capacity and can more reliably predict solubility of novel proteins. Availability and implementation: DeepSol's best performing models and results are publicly deposited at https://doi.org/10.5281/zenodo.1162886 (Khurana and Mall, 2018). Supplementary information: Supplementary data are available at Bioinformatics online.",
+      "abstract": "Abstract Motivation Protein solubility plays a vital role in pharmaceutical research and production yield. For a given protein, the extent of its solubility can represent the quality of its function, and is ultimately defined by its sequence. Thus, it is imperative to develop novel, highly accurate in silico sequence-based protein solubility predictors. In this work we propose, DeepSol, a novel Deep Learning-based protein solubility predictor. The backbone of our framework is a convolutional neural network that exploits k-mer structure and additional sequence and structural features extracted from the protein sequence. Results DeepSol outperformed all known sequence-based state-of-the-art solubility prediction methods and attained an accuracy of 0.77 and Matthew\u2019s correlation coefficient of 0.55. The superior prediction accuracy of DeepSol allows to screen for sequences with enhanced production capacity and can more reliably predict solubility of novel proteins. Availability and implementation DeepSol\u2019s best performing models and results are publicly deposited at https://doi.org/10.5281/zenodo.1162886 (Khurana and Mall, 2018). Supplementary information Supplementary data are available at Bioinformatics online.",
       "area": "bio",
       "authors": [
         "Sameer Khurana",
@@ -710,7 +710,7 @@
     "prediction_cutoff_year": 2018
   },
   {
-    "date_filtering": "Prediction inputs include only title, abstract, authors, venue, concepts, and references available in 2018. Citation outcomes are stored separately and are not passed to the forecaster.",
+    "date_filtering": "Prediction inputs include only the focal title and abstract as the pre-publication hypothesis. Literature retrieval is restricted to evidence available through 2017. Citation outcomes are stored separately and are not passed to the pipeline.",
     "ground_truth": {
       "citations_at_1y": 10,
       "citations_by_year": {
@@ -727,13 +727,13 @@
       "citing_works_sampled": 120,
       "depth_proxy": 81,
       "disruption_proxy": -0.5166666666666667,
-      "distinct_citing_concepts": 457,
+      "distinct_citing_concepts": 454,
       "total_citations_2024": 169,
-      "translation_citation_proxy": 24
+      "translation_citation_proxy": 23
     },
     "ground_truth_year": 2024,
     "metadata": {
-      "abstract": "MOTIVATION: Phosphorylation is the most studied post-translational modification, which is crucial for multiple biological processes. Recently, many efforts have been taken to develop computational predictors for phosphorylation site prediction, but most of them are based on feature selection and discriminative classification. Thus, it is useful to develop a novel and highly accurate predictor that can unveil intricate patterns automatically for protein phosphorylation sites. RESULTS: In this study we present DeepPhos, a novel deep learning architecture for prediction of protein phosphorylation. Unlike multi-layer convolutional neural networks, DeepPhos consists of densely connected convolutional neuron network blocks which can capture multiple representations of sequences to make final phosphorylation prediction by intra block concatenation layers and inter block concatenation layers. DeepPhos can also be used for kinase-specific prediction varying from group, family, subfamily and individual kinase level. The experimental results demonstrated that DeepPhos outperforms competitive predictors in general and kinase-specific phosphorylation site prediction. AVAILABILITY AND IMPLEMENTATION: The source code of DeepPhos is publicly deposited at https://github.com/USTCHIlab/DeepPhos. SUPPLEMENTARY INFORMATION: Supplementary data are available at Bioinformatics online.",
+      "abstract": "Abstract Motivation Phosphorylation is the most studied post-translational modification, which is crucial for multiple biological processes. Recently, many efforts have been taken to develop computational predictors for phosphorylation site prediction, but most of them are based on feature selection and discriminative classification. Thus, it is useful to develop a novel and highly accurate predictor that can unveil intricate patterns automatically for protein phosphorylation sites. Results In this study we present DeepPhos, a novel deep learning architecture for prediction of protein phosphorylation. Unlike multi-layer convolutional neural networks, DeepPhos consists of densely connected convolutional neuron network blocks which can capture multiple representations of sequences to make final phosphorylation prediction by intra block concatenation layers and inter block concatenation layers. DeepPhos can also be used for kinase-specific prediction varying from group, family, subfamily and individual kinase level. The experimental results demonstrated that DeepPhos outperforms competitive predictors in general and kinase-specific phosphorylation site prediction. Availability and implementation The source code of DeepPhos is publicly deposited at https://github.com/USTCHIlab/DeepPhos. Supplementary information Supplementary data are available at Bioinformatics online.",
       "area": "bio",
       "authors": [
         "Fenglin Luo",
@@ -769,7 +769,7 @@
     "prediction_cutoff_year": 2018
   },
   {
-    "date_filtering": "Prediction inputs include only title, abstract, authors, venue, concepts, and references available in 2018. Citation outcomes are stored separately and are not passed to the forecaster.",
+    "date_filtering": "Prediction inputs include only the focal title and abstract as the pre-publication hypothesis. Literature retrieval is restricted to evidence available through 2017. Citation outcomes are stored separately and are not passed to the pipeline.",
     "ground_truth": {
       "citations_at_1y": 20,
       "citations_by_year": {
@@ -831,7 +831,7 @@
     "prediction_cutoff_year": 2018
   },
   {
-    "date_filtering": "Prediction inputs include only title, abstract, authors, venue, concepts, and references available in 2018. Citation outcomes are stored separately and are not passed to the forecaster.",
+    "date_filtering": "Prediction inputs include only the focal title and abstract as the pre-publication hypothesis. Literature retrieval is restricted to evidence available through 2017. Citation outcomes are stored separately and are not passed to the pipeline.",
     "ground_truth": {
       "citations_at_1y": 13,
       "citations_by_year": {
@@ -889,7 +889,7 @@
     "prediction_cutoff_year": 2018
   },
   {
-    "date_filtering": "Prediction inputs include only title, abstract, authors, venue, concepts, and references available in 2018. Citation outcomes are stored separately and are not passed to the forecaster.",
+    "date_filtering": "Prediction inputs include only the focal title and abstract as the pre-publication hypothesis. Literature retrieval is restricted to evidence available through 2017. Citation outcomes are stored separately and are not passed to the pipeline.",
     "ground_truth": {
       "citations_at_1y": 12,
       "citations_by_year": {
@@ -948,7 +948,7 @@
     "prediction_cutoff_year": 2018
   },
   {
-    "date_filtering": "Prediction inputs include only title, abstract, authors, venue, concepts, and references available in 2018. Citation outcomes are stored separately and are not passed to the forecaster.",
+    "date_filtering": "Prediction inputs include only the focal title and abstract as the pre-publication hypothesis. Literature retrieval is restricted to evidence available through 2017. Citation outcomes are stored separately and are not passed to the pipeline.",
     "ground_truth": {
       "citations_at_1y": 37,
       "citations_by_year": {
@@ -1009,7 +1009,7 @@
     "prediction_cutoff_year": 2018
   },
   {
-    "date_filtering": "Prediction inputs include only title, abstract, authors, venue, concepts, and references available in 2018. Citation outcomes are stored separately and are not passed to the forecaster.",
+    "date_filtering": "Prediction inputs include only the focal title and abstract as the pre-publication hypothesis. Literature retrieval is restricted to evidence available through 2017. Citation outcomes are stored separately and are not passed to the pipeline.",
     "ground_truth": {
       "citations_at_1y": 11,
       "citations_by_year": {
@@ -1075,7 +1075,7 @@
     "prediction_cutoff_year": 2018
   },
   {
-    "date_filtering": "Prediction inputs include only title, abstract, authors, venue, concepts, and references available in 2018. Citation outcomes are stored separately and are not passed to the forecaster.",
+    "date_filtering": "Prediction inputs include only the focal title and abstract as the pre-publication hypothesis. Literature retrieval is restricted to evidence available through 2017. Citation outcomes are stored separately and are not passed to the pipeline.",
     "ground_truth": {
       "citations_at_1y": 9,
       "citations_by_year": {
@@ -1136,7 +1136,7 @@
     "prediction_cutoff_year": 2018
   },
   {
-    "date_filtering": "Prediction inputs include only title, abstract, authors, venue, concepts, and references available in 2018. Citation outcomes are stored separately and are not passed to the forecaster.",
+    "date_filtering": "Prediction inputs include only the focal title and abstract as the pre-publication hypothesis. Literature retrieval is restricted to evidence available through 2017. Citation outcomes are stored separately and are not passed to the pipeline.",
     "ground_truth": {
       "citations_at_1y": 7,
       "citations_by_year": {
@@ -1197,7 +1197,7 @@
     "prediction_cutoff_year": 2018
   },
   {
-    "date_filtering": "Prediction inputs include only title, abstract, authors, venue, concepts, and references available in 2018. Citation outcomes are stored separately and are not passed to the forecaster.",
+    "date_filtering": "Prediction inputs include only the focal title and abstract as the pre-publication hypothesis. Literature retrieval is restricted to evidence available through 2017. Citation outcomes are stored separately and are not passed to the pipeline.",
     "ground_truth": {
       "citations_at_1y": 12,
       "citations_by_year": {
@@ -1213,8 +1213,8 @@
       "citing_review_count": 18,
       "citing_works_sampled": 120,
       "depth_proxy": 91,
-      "disruption_proxy": -0.45,
-      "distinct_citing_concepts": 496,
+      "disruption_proxy": -0.43333333333333335,
+      "distinct_citing_concepts": 494,
       "total_citations_2024": 254,
       "translation_citation_proxy": 119
     },
@@ -1257,7 +1257,7 @@
     "prediction_cutoff_year": 2018
   },
   {
-    "date_filtering": "Prediction inputs include only title, abstract, authors, venue, concepts, and references available in 2018. Citation outcomes are stored separately and are not passed to the forecaster.",
+    "date_filtering": "Prediction inputs include only the focal title and abstract as the pre-publication hypothesis. Literature retrieval is restricted to evidence available through 2017. Citation outcomes are stored separately and are not passed to the pipeline.",
     "ground_truth": {
       "citations_at_1y": 19,
       "citations_by_year": {
@@ -1275,7 +1275,7 @@
       "citing_works_sampled": 120,
       "depth_proxy": 59,
       "disruption_proxy": -0.36666666666666664,
-      "distinct_citing_concepts": 550,
+      "distinct_citing_concepts": 545,
       "total_citations_2024": 214,
       "translation_citation_proxy": 116
     },
@@ -1322,7 +1322,7 @@
     "prediction_cutoff_year": 2018
   },
   {
-    "date_filtering": "Prediction inputs include only title, abstract, authors, venue, concepts, and references available in 2018. Citation outcomes are stored separately and are not passed to the forecaster.",
+    "date_filtering": "Prediction inputs include only the focal title and abstract as the pre-publication hypothesis. Literature retrieval is restricted to evidence available through 2017. Citation outcomes are stored separately and are not passed to the pipeline.",
     "ground_truth": {
       "citations_at_1y": 18,
       "citations_by_year": {
@@ -1379,7 +1379,7 @@
     "prediction_cutoff_year": 2018
   },
   {
-    "date_filtering": "Prediction inputs include only title, abstract, authors, venue, concepts, and references available in 2018. Citation outcomes are stored separately and are not passed to the forecaster.",
+    "date_filtering": "Prediction inputs include only the focal title and abstract as the pre-publication hypothesis. Literature retrieval is restricted to evidence available through 2017. Citation outcomes are stored separately and are not passed to the pipeline.",
     "ground_truth": {
       "citations_at_1y": 9,
       "citations_by_year": {
@@ -1439,65 +1439,7 @@
     "prediction_cutoff_year": 2018
   },
   {
-    "date_filtering": "Prediction inputs include only title, abstract, authors, venue, concepts, and references available in 2018. Citation outcomes are stored separately and are not passed to the forecaster.",
-    "ground_truth": {
-      "citations_at_1y": 150,
-      "citations_by_year": {
-        "2012": 1,
-        "2018": 21,
-        "2019": 129,
-        "2020": 245,
-        "2021": 343,
-        "2022": 250,
-        "2023": 283,
-        "2024": 269
-      },
-      "citations_first_24_months": 150,
-      "citing_paper_h_index_proxy": 113,
-      "citing_review_count": 47,
-      "citing_works_sampled": 120,
-      "depth_proxy": 207,
-      "disruption_proxy": -0.8,
-      "distinct_citing_concepts": 593,
-      "total_citations_2024": 1541,
-      "translation_citation_proxy": 112
-    },
-    "ground_truth_year": 2024,
-    "metadata": {
-      "abstract": "The discovery of new materials can bring enormous societal and technological progress. In this context, exploring completely the large space of potential materials is computationally intractable. Here, we review methods for achieving inverse design, which aims to discover tailored materials from the starting point of a particular desired functionality. Recent advances from the rapidly growing field of artificial intelligence, mostly from the subfield of machine learning, have resulted in a fertile exchange of ideas, where approaches to inverse molecular design are being proposed and employed at a rapid pace. Among these, deep generative models have been applied to numerous classes of materials: rational design of prospective drugs, synthetic routes to organic compounds, and optimization of photovoltaics and redox flow batteries, as well as a variety of other solid-state materials.",
-      "area": "materials",
-      "authors": [
-        "Benjam\u00edn S\u00e1nchez-Lengeling",
-        "Al\u00e1n Aspuru\u2010Guzik"
-      ],
-      "concepts": [
-        "Generative grammar",
-        "Context (archaeology)",
-        "Computer science",
-        "Variety (cybernetics)",
-        "Pace",
-        "Artificial intelligence",
-        "Generative Design",
-        "Biochemical engineering",
-        "Machine learning",
-        "Engineering",
-        "Biology",
-        "Geography"
-      ],
-      "doi": "10.1126/science.aat2663",
-      "openalex_key": "W2883583109",
-      "paper_id": "https://openalex.org/W2883583109",
-      "publication_date": "2018-07-26",
-      "referenced_works_count": 84,
-      "selection_query": "machine learning materials discovery",
-      "title": "Inverse molecular design using machine learning: Generative models for matter engineering",
-      "venue": "Science",
-      "year": 2018
-    },
-    "prediction_cutoff_year": 2018
-  },
-  {
-    "date_filtering": "Prediction inputs include only title, abstract, authors, venue, concepts, and references available in 2018. Citation outcomes are stored separately and are not passed to the forecaster.",
+    "date_filtering": "Prediction inputs include only the focal title and abstract as the pre-publication hypothesis. Literature retrieval is restricted to evidence available through 2017. Citation outcomes are stored separately and are not passed to the pipeline.",
     "ground_truth": {
       "citations_at_1y": 2,
       "citations_by_year": {
@@ -1557,7 +1499,65 @@
     "prediction_cutoff_year": 2018
   },
   {
-    "date_filtering": "Prediction inputs include only title, abstract, authors, venue, concepts, and references available in 2018. Citation outcomes are stored separately and are not passed to the forecaster.",
+    "date_filtering": "Prediction inputs include only the focal title and abstract as the pre-publication hypothesis. Literature retrieval is restricted to evidence available through 2017. Citation outcomes are stored separately and are not passed to the pipeline.",
+    "ground_truth": {
+      "citations_at_1y": 150,
+      "citations_by_year": {
+        "2012": 1,
+        "2018": 21,
+        "2019": 129,
+        "2020": 245,
+        "2021": 343,
+        "2022": 250,
+        "2023": 283,
+        "2024": 269
+      },
+      "citations_first_24_months": 150,
+      "citing_paper_h_index_proxy": 113,
+      "citing_review_count": 47,
+      "citing_works_sampled": 120,
+      "depth_proxy": 207,
+      "disruption_proxy": -0.8,
+      "distinct_citing_concepts": 593,
+      "total_citations_2024": 1541,
+      "translation_citation_proxy": 112
+    },
+    "ground_truth_year": 2024,
+    "metadata": {
+      "abstract": "The discovery of new materials can bring enormous societal and technological progress. In this context, exploring completely the large space of potential materials is computationally intractable. Here, we review methods for achieving inverse design, which aims to discover tailored materials from the starting point of a particular desired functionality. Recent advances from the rapidly growing field of artificial intelligence, mostly from the subfield of machine learning, have resulted in a fertile exchange of ideas, where approaches to inverse molecular design are being proposed and employed at a rapid pace. Among these, deep generative models have been applied to numerous classes of materials: rational design of prospective drugs, synthetic routes to organic compounds, and optimization of photovoltaics and redox flow batteries, as well as a variety of other solid-state materials.",
+      "area": "materials",
+      "authors": [
+        "Benjam\u00edn S\u00e1nchez-Lengeling",
+        "Al\u00e1n Aspuru\u2010Guzik"
+      ],
+      "concepts": [
+        "Generative grammar",
+        "Context (archaeology)",
+        "Computer science",
+        "Variety (cybernetics)",
+        "Pace",
+        "Artificial intelligence",
+        "Generative Design",
+        "Biochemical engineering",
+        "Machine learning",
+        "Engineering",
+        "Biology",
+        "Geography"
+      ],
+      "doi": "10.1126/science.aat2663",
+      "openalex_key": "W2883583109",
+      "paper_id": "https://openalex.org/W2883583109",
+      "publication_date": "2018-07-26",
+      "referenced_works_count": 84,
+      "selection_query": "machine learning materials discovery",
+      "title": "Inverse molecular design using machine learning: Generative models for matter engineering",
+      "venue": "Science",
+      "year": 2018
+    },
+    "prediction_cutoff_year": 2018
+  },
+  {
+    "date_filtering": "Prediction inputs include only the focal title and abstract as the pre-publication hypothesis. Literature retrieval is restricted to evidence available through 2017. Citation outcomes are stored separately and are not passed to the pipeline.",
     "ground_truth": {
       "citations_at_1y": 3,
       "citations_by_year": {
@@ -1611,7 +1611,7 @@
     "prediction_cutoff_year": 2018
   },
   {
-    "date_filtering": "Prediction inputs include only title, abstract, authors, venue, concepts, and references available in 2018. Citation outcomes are stored separately and are not passed to the forecaster.",
+    "date_filtering": "Prediction inputs include only the focal title and abstract as the pre-publication hypothesis. Literature retrieval is restricted to evidence available through 2017. Citation outcomes are stored separately and are not passed to the pipeline.",
     "ground_truth": {
       "citations_at_1y": 96,
       "citations_by_year": {
@@ -1628,7 +1628,7 @@
       "citing_review_count": 19,
       "citing_works_sampled": 120,
       "depth_proxy": 110,
-      "disruption_proxy": -0.35,
+      "disruption_proxy": -0.36666666666666664,
       "distinct_citing_concepts": 625,
       "total_citations_2024": 464,
       "translation_citation_proxy": 118
@@ -1673,7 +1673,7 @@
     "prediction_cutoff_year": 2018
   },
   {
-    "date_filtering": "Prediction inputs include only title, abstract, authors, venue, concepts, and references available in 2018. Citation outcomes are stored separately and are not passed to the forecaster.",
+    "date_filtering": "Prediction inputs include only the focal title and abstract as the pre-publication hypothesis. Literature retrieval is restricted to evidence available through 2017. Citation outcomes are stored separately and are not passed to the pipeline.",
     "ground_truth": {
       "citations_at_1y": 1,
       "citations_by_year": {
@@ -1729,7 +1729,7 @@
     "prediction_cutoff_year": 2018
   },
   {
-    "date_filtering": "Prediction inputs include only title, abstract, authors, venue, concepts, and references available in 2018. Citation outcomes are stored separately and are not passed to the forecaster.",
+    "date_filtering": "Prediction inputs include only the focal title and abstract as the pre-publication hypothesis. Literature retrieval is restricted to evidence available through 2017. Citation outcomes are stored separately and are not passed to the pipeline.",
     "ground_truth": {
       "citations_at_1y": 31,
       "citations_by_year": {
@@ -1747,7 +1747,7 @@
       "citing_works_sampled": 120,
       "depth_proxy": 83,
       "disruption_proxy": -0.25,
-      "distinct_citing_concepts": 638,
+      "distinct_citing_concepts": 644,
       "total_citations_2024": 263,
       "translation_citation_proxy": 114
     },

@@ -4,6 +4,7 @@ import argparse
 import asyncio
 import csv
 import json
+import os
 import sys
 import time
 from pathlib import Path
@@ -18,7 +19,7 @@ if str(ROOT) not in sys.path:
 from backend.config import MAX_API_TIMEOUT, OPENALEX_EMAIL
 from backend.impact_forecaster import impact_forecaster
 from backend.llm_client import LLMUnavailable, complete_structured
-from backend.pipeline import run_pipeline
+from backend.pipeline import run_pipeline, run_scorecard_pipeline
 from backend.schemas import ImpactForecast, Paper, ParsedHypothesis
 from backend.tools.api_cache import cached_get_json
 from backend.tools.semantic_scholar import get_paper_citations
@@ -26,6 +27,7 @@ from backend.tools.semantic_scholar import get_paper_citations
 
 OPENALEX_WORKS_URL = "https://api.openalex.org/works"
 PREDICTION_CUTOFF_YEAR = 2018
+RETRIEVAL_CUTOFF_YEAR = PREDICTION_CUTOFF_YEAR - 1
 GROUND_TRUTH_YEAR = 2024
 DIMENSIONS = ("volume", "velocity", "reach", "depth", "disruption", "translation")
 
@@ -121,11 +123,20 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--max-citing-works", type=int, default=120, help="Max OpenAlex citing works per paper.")
     parser.add_argument("--refresh-dataset", action="store_true", help="Ignore cached dataset JSON and pull again.")
     parser.add_argument("--skip-plot", action="store_true", help="Compute metrics without writing the PNG plot.")
+    parser.add_argument("--disable-llm", action="store_true", help="Force deterministic fallback scoring for reproducible validation.")
+    parser.add_argument(
+        "--with-variants",
+        action="store_true",
+        help="Also run mutation and variant re-scoring for every backtest record. Slower; not required for Spearman validation.",
+    )
     return parser.parse_args()
 
 
 async def main() -> None:
     args = parse_args()
+    if args.disable_llm:
+        os.environ["MAGENT_DISABLE_LLM"] = "1"
+
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
     dataset_path = output_dir / "backtest_dataset.json"
@@ -140,10 +151,11 @@ async def main() -> None:
     results = []
     for idx, record in enumerate(records, start=1):
         print(f"[{idx}/{len(records)}] forecasting: {record['metadata']['title'][:90]}")
-        prediction = await run_prediction(record)
+        prediction_state = await run_prediction_state(record, include_variants=args.with_variants)
+        prediction = prediction_state["forecast"]
         baseline_gpt = await run_single_call_baseline(record)
         row = build_result_row(record, prediction, baseline_gpt)
-        row.update(await run_variant_improvement_summary(record))
+        row.update(build_variant_improvement_summary(prediction_state))
         results.append(row)
 
     add_linear_regression_baseline(results)
@@ -211,9 +223,10 @@ def collect_dataset(limit: int, max_citing_works: int) -> list[dict[str, Any]]:
                 "prediction_cutoff_year": PREDICTION_CUTOFF_YEAR,
                 "ground_truth_year": GROUND_TRUTH_YEAR,
                 "date_filtering": (
-                    "Prediction inputs include only title, abstract, authors, venue, "
-                    "concepts, and references available in 2018. Citation outcomes "
-                    "are stored separately and are not passed to the forecaster."
+                    "Prediction inputs include only the focal title and abstract as the "
+                    "pre-publication hypothesis. Literature retrieval is restricted to "
+                    f"evidence available through {RETRIEVAL_CUTOFF_YEAR}. Citation outcomes "
+                    "are stored separately and are not passed to the pipeline."
                 ),
             }
         )
@@ -351,44 +364,18 @@ def semantic_scholar_citing_fallback(work: dict[str, Any]) -> list[dict[str, Any
     return converted
 
 
-async def run_prediction(record: dict[str, Any]) -> ImpactForecast:
+async def run_prediction_state(record: dict[str, Any], *, include_variants: bool) -> dict[str, Any]:
     metadata = record["metadata"]
     extraction = await extract_hypothesis(metadata)
-    state = {
-        "raw_hypothesis": extraction.hypothesis,
-        "parsed": ParsedHypothesis(
-            claim=extraction.claim,
-            mechanism=extraction.mechanism,
-            context=extraction.context,
-            population=extraction.population,
-            method=extraction.method,
-        ),
-        "papers": [paper_from_metadata(metadata)],
-        "backtest_metadata": sanitized_metadata(metadata),
-        "information_cutoff_year": PREDICTION_CUTOFF_YEAR,
-        "emulator_outputs": [],
-    }
-    result = await impact_forecaster(state)
-    return result["forecast"]
+    runner = run_pipeline if include_variants else run_scorecard_pipeline
+    return await runner(
+        extraction.hypothesis,
+        information_cutoff_year=RETRIEVAL_CUTOFF_YEAR,
+        backtest_metadata=sanitized_metadata(metadata),
+    )
 
 
-async def run_variant_improvement_summary(record: dict[str, Any]) -> dict[str, Any]:
-    metadata = record["metadata"]
-    extraction = await extract_hypothesis(metadata)
-    try:
-        state = await run_pipeline(extraction.hypothesis)
-    except Exception as exc:
-        return {
-            "pipeline_status": f"failed:{type(exc).__name__}",
-            "original_composite_score": 0,
-            "top_candidate_id": "",
-            "top_candidate_operator": "",
-            "top_candidate_score": 0,
-            "variant_improvement": 0,
-            "original_dominated": False,
-            "pareto_selected_count": 0,
-        }
-
+def build_variant_improvement_summary(state: dict[str, Any]) -> dict[str, Any]:
     scorecard = state.get("scorecard")
     ranked = state.get("ranked_variants", [])
     top = ranked[0] if ranked else None
@@ -396,7 +383,7 @@ async def run_variant_improvement_summary(record: dict[str, Any]) -> dict[str, A
     original_score = int(getattr(scorecard, "composite_score", 0) or 0)
     top_score = int(getattr(top, "composite_score", original_score) or 0) if top else original_score
     return {
-        "pipeline_status": "ok",
+        "pipeline_status": "ok" if ranked else "scored_only",
         "original_composite_score": original_score,
         "top_candidate_id": getattr(top, "variant_id", "") if top else "",
         "top_candidate_operator": getattr(top, "operator", "") if top else "",

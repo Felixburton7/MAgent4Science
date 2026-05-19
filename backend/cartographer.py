@@ -11,7 +11,7 @@ from backend.evidence_utils import (
     query_candidates,
     text_relevance,
 )
-from backend.schemas import Paper
+from backend.schemas import Paper, RetrievalReport, SourceError
 from backend.tools.openalex import search_works
 from backend.tools.semantic_scholar import search_paper_records
 
@@ -25,16 +25,23 @@ async def cartographer(state: dict[str, Any]) -> dict[str, Any]:
     primary_query = parsed_query(state)
     papers_by_key: dict[str, Paper] = {}
     openalex_total_count: int = 0
+    cutoff_year = _cutoff_year(state)
+    source_errors: list[SourceError] = []
 
     attempted_queries = query_candidates(state, max_candidates=MAX_QUERY_ATTEMPTS)
     for query in attempted_queries:
-        papers, count = _openalex_papers(query, primary_query)
+        papers, count, error = _openalex_papers(query, primary_query, cutoff_year)
+        if error:
+            source_errors.append(SourceError(source="openalex", query=query, error=error))
         for paper in papers:
             _merge_paper(papers_by_key, paper)
         openalex_total_count = max(openalex_total_count, count)
 
     for query in attempted_queries[:MAX_SEMANTIC_SCHOLAR_QUERIES]:
-        for paper in _semantic_scholar_papers(query, primary_query):
+        semantic_papers, error = _semantic_scholar_papers(query, primary_query, cutoff_year)
+        if error:
+            source_errors.append(SourceError(source="semantic_scholar", query=query, error=error))
+        for paper in semantic_papers:
             _merge_paper(papers_by_key, paper)
 
     papers = list(papers_by_key.values())
@@ -49,17 +56,32 @@ async def cartographer(state: dict[str, Any]) -> dict[str, Any]:
         key=lambda paper: (paper.relevance_score, len(paper.source_provenance), paper.citation_count, paper.year or 0),
         reverse=True,
     )[:MAX_PAPERS]
-    return {"papers": ranked, "openalex_total_count": openalex_total_count}
+    report = RetrievalReport(
+        status=_retrieval_status(ranked, source_errors),
+        attempted_queries=attempted_queries,
+        source_errors=source_errors,
+        cutoff_year=cutoff_year,
+        paper_count=len(ranked),
+        openalex_total_count=openalex_total_count,
+    )
+    return {
+        "papers": ranked,
+        "openalex_total_count": openalex_total_count,
+        "retrieval_report": report,
+    }
 
 
 run = cartographer
 
 
-def _openalex_papers(query: str, scoring_query: str) -> tuple[list[Paper], int]:
+def _openalex_papers(query: str, scoring_query: str, cutoff_year: int | None) -> tuple[list[Paper], int, str]:
+    params: dict[str, Any] = {}
+    if cutoff_year is not None:
+        params["filter"] = f"to_publication_date:{cutoff_year}-12-31"
     try:
-        data = search_works(query, per_page=MAX_PAPERS)
-    except Exception:
-        return [], 0
+        data = search_works(query, per_page=MAX_PAPERS, **params)
+    except Exception as exc:
+        return [], 0, f"{type(exc).__name__}: {exc}"
 
     total_count: int = int((data.get("meta") or {}).get("count") or 0)
     results = data.get("results", [])
@@ -68,6 +90,9 @@ def _openalex_papers(query: str, scoring_query: str) -> tuple[list[Paper], int]:
     for rank, work in enumerate(results, start=1):
         title = (work.get("display_name") or work.get("title") or "").strip()
         if not title:
+            continue
+        year = work.get("publication_year")
+        if cutoff_year is not None and year and int(year) > cutoff_year:
             continue
 
         abstract = _openalex_abstract(work.get("abstract_inverted_index") or {})
@@ -91,10 +116,10 @@ def _openalex_papers(query: str, scoring_query: str) -> tuple[list[Paper], int]:
             paper_id="",
             title=title,
             authors=authors,
-            year=work.get("publication_year"),
+            year=year,
             abstract=abstract,
             url=_openalex_url(work),
-            citation_count=int(work.get("cited_by_count") or 0),
+            citation_count=_citation_count(work, cutoff_year),
             relevance_score=round(relevance, 3),
             cluster=_concept_cluster(work),
             doi=doi,
@@ -103,14 +128,14 @@ def _openalex_papers(query: str, scoring_query: str) -> tuple[list[Paper], int]:
             source_provenance=["openalex"],
         )
         papers.append(_copy_model(paper, paper_id=paper_evidence_id(paper)))
-    return papers, total_count
+    return papers, total_count, ""
 
 
-def _semantic_scholar_papers(query: str, scoring_query: str) -> list[Paper]:
+def _semantic_scholar_papers(query: str, scoring_query: str, cutoff_year: int | None) -> tuple[list[Paper], str]:
     try:
         records = search_paper_records(query, limit=MAX_PAPERS // 2)
-    except Exception:
-        return []
+    except Exception as exc:
+        return [], f"{type(exc).__name__}: {exc}"
 
     papers = []
     for record in records:
@@ -122,16 +147,19 @@ def _semantic_scholar_papers(query: str, scoring_query: str) -> list[Paper]:
         openalex_id = normalize_openalex_id(external_ids.get("OpenAlex"))
         semantic_scholar_id = (record.get("paperId") or "").strip()
         abstract = record.get("abstract") or ""
+        year = record.get("year")
+        if cutoff_year is not None and year and int(year) > cutoff_year:
+            continue
         authors = [(author.get("name") or "").strip() for author in record.get("authors", [])[:8]]
         authors = [author for author in authors if author]
         paper = Paper(
             paper_id="",
             title=title,
             authors=authors,
-            year=record.get("year"),
+            year=year,
             abstract=abstract,
             url=_semantic_scholar_url(record, doi),
-            citation_count=int(record.get("citationCount") or 0),
+            citation_count=0 if cutoff_year is not None else int(record.get("citationCount") or 0),
             relevance_score=round(max(text_relevance(query, title, abstract), text_relevance(scoring_query, title, abstract)), 3),
             cluster="unclustered",
             doi=doi,
@@ -140,7 +168,7 @@ def _semantic_scholar_papers(query: str, scoring_query: str) -> list[Paper]:
             source_provenance=["semantic_scholar"],
         )
         papers.append(_copy_model(paper, paper_id=paper_evidence_id(paper)))
-    return papers
+    return papers, ""
 
 
 def _merge_paper(papers_by_key: dict[str, Paper], incoming: Paper) -> None:
@@ -196,6 +224,39 @@ def _semantic_scholar_url(record: dict[str, Any], doi: str) -> str:
 def _concept_cluster(work: dict[str, Any]) -> str:
     concepts = [concept.get("display_name", "") for concept in work.get("concepts", [])[:2] if concept.get("display_name")]
     return " / ".join(concepts) if concepts else "unclustered"
+
+
+def _citation_count(work: dict[str, Any], cutoff_year: int | None) -> int:
+    if cutoff_year is None:
+        return int(work.get("cited_by_count") or 0)
+    counts = work.get("counts_by_year") or []
+    if not counts:
+        return 0
+    return sum(
+        int(item.get("cited_by_count") or 0)
+        for item in counts
+        if item.get("year") is not None and int(item["year"]) <= cutoff_year
+    )
+
+
+def _cutoff_year(state: dict[str, Any]) -> int | None:
+    raw = state.get("information_cutoff_year") or state.get("cutoff_year")
+    if raw is None:
+        return None
+    try:
+        return int(raw)
+    except (TypeError, ValueError):
+        return None
+
+
+def _retrieval_status(papers: list[Paper], source_errors: list[SourceError]) -> str:
+    if papers and source_errors:
+        return "partial"
+    if papers:
+        return "ok"
+    if source_errors:
+        return "failed"
+    return "no_results"
 
 
 def _embed_rerank(papers: list[Paper], primary_query: str) -> list[Paper]:

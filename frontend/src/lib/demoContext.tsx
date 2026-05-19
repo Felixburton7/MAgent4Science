@@ -68,6 +68,8 @@ export function DemoProvider({ children }: { children: React.ReactNode }) {
           forecast: data.forecast ?? prev.forecast,
           metric_scores: data.metric_scores ?? prev.metric_scores,
           scorecard: data.scorecard ?? prev.scorecard,
+          retrieval_report: data.retrieval_report ?? prev.retrieval_report,
+          openalex_total_count: data.openalex_total_count ?? prev.openalex_total_count,
           variants:
             data.ranked_variants && data.ranked_variants.length > 0
               ? data.ranked_variants
@@ -75,6 +77,9 @@ export function DemoProvider({ children }: { children: React.ReactNode }) {
           ranked_variants: data.ranked_variants ?? prev.ranked_variants,
           final_memo: data.final_memo ?? prev.final_memo,
         }));
+      }
+      if (data?.retrieval_report?.status && data.retrieval_report.status !== "ok") {
+        console.warn("Literature retrieval completed with warnings.", data.retrieval_report);
       }
       const elapsed = Date.now() - startedAt;
       const delay = Math.max(0, minWaitMs - elapsed);

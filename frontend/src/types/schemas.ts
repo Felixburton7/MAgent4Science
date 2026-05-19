@@ -25,6 +25,21 @@ export interface Paper {
   source_provenance?: string[];
 }
 
+export interface SourceError {
+  source: string;
+  query: string;
+  error: string;
+}
+
+export interface RetrievalReport {
+  status: "ok" | "partial" | "no_results" | "failed";
+  attempted_queries: string[];
+  source_errors: SourceError[];
+  cutoff_year?: number | null;
+  paper_count: number;
+  openalex_total_count: number;
+}
+
 export interface Conflict {
   paper_id: string;
   title: string;
@@ -174,19 +189,21 @@ export interface StrategyMemo {
 export interface PipelineState {
   raw_hypothesis: string;
   parsed?: ParsedHypothesis;
-  papers: Paper[];
-  conflicts: Conflict[];
+  papers?: Paper[];
+  conflicts?: Conflict[];
   overlaps?: OverlapReport;
-  groups: ResearchGroup[];
-  emulator_outputs: EmulatorOutput[];
-  scenarios: Scenario[];
   forecast?: ImpactForecast;
   metric_scores?: MetricScore[];
   scorecard?: Scorecard;
-  variants: Variant[];
+  variants?: Variant[];
+  rescored_variants?: Variant[];
+  pareto_variants?: Variant[];
   ranked_variants?: Variant[];
-  groundedness_checks: GroundednessCheck[];
   final_memo?: StrategyMemo;
+  information_cutoff_year?: number | null;
+  backtest_metadata?: Record<string, unknown> | null;
+  openalex_total_count?: number | null;
+  retrieval_report?: RetrievalReport | null;
 }
 
 // Frontend-only additions used for demo presentation; not produced by the backend.
@@ -205,5 +222,12 @@ export interface DemoExtras {
 }
 
 export interface DemoState extends PipelineState {
+  papers: Paper[];
+  conflicts: Conflict[];
+  groups: ResearchGroup[];
+  emulator_outputs: EmulatorOutput[];
+  scenarios: Scenario[];
+  variants: Variant[];
+  groundedness_checks: GroundednessCheck[];
   extras: DemoExtras;
 }

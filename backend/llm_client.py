@@ -104,6 +104,9 @@ def _complete_structured_sync(
 
 
 def _ensure_openai_api_key() -> str:
+    if os.getenv("MAGENT_DISABLE_LLM", "").strip().lower() in {"1", "true", "yes"}:
+        return ""
+
     key = os.getenv("OPENAI_API_KEY", "").strip()
     if key:
         return key

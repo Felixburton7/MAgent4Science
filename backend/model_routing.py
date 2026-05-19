@@ -25,18 +25,18 @@ class ModelRoute:
 # mutation -> variant re-scoring -> ranking/Pareto -> strategy memo.
 CORE_MODEL_ROUTES: dict[str, ModelRoute] = {
     "parser": ModelRoute("gpt-5-nano", notes="Parse raw hypothesis into ParsedHypothesis."),
-    "cartographer": ModelRoute("gpt-5", notes="Retrieve and summarize literature evidence."),
+    "cartographer": ModelRoute("gpt-5-nano", notes="Retrieve and summarize literature evidence."),
     "novelty_scorer": ModelRoute("gpt-5-nano", notes="Return MetricScore for novelty."),
     "saturation_scorer": ModelRoute("gpt-5-nano", notes="Return MetricScore for saturation/overlap."),
     "conflict_scorer": ModelRoute("gpt-5-nano", notes="Return MetricScore for conflict risk."),
     "feasibility_scorer": ModelRoute("gpt-5-mini", notes="Return MetricScore for feasibility."),
     "impact_forecaster": ModelRoute("gpt-5-mini", notes="Forecast volume, velocity, reach, depth, disruption, translation."),
     "evidence_quality_scorer": ModelRoute("gpt-5-nano", notes="Return MetricScore for evidence quality."),
-    "score_aggregator": ModelRoute("gpt-5", notes="Deterministically combine metrics into scorecard."),
+    "score_aggregator": ModelRoute("code", structured_output=False, notes="Deterministically combine metrics into scorecard."),
     "mutator": ModelRoute("gpt-5", notes="Generate variants targeted at weak metrics."),
     "variant_rescorer": ModelRoute("gpt-5-mini", notes="Re-score each variant using MetricScore outputs."),
-    "ranker": ModelRoute("gpt-5", notes="Deterministically rank variants."),
-    "pareto_curator": ModelRoute("gpt-5", notes="Compute non-dominated variants and dominance explanations."),
+    "ranker": ModelRoute("code", structured_output=False, notes="Deterministically rank variants."),
+    "pareto_curator": ModelRoute("gpt-5-nano", notes="Compute non-dominated variants and synthesize short explanations."),
     "strategist": ModelRoute(
         "gpt-5",
         reasoning_effort="high",

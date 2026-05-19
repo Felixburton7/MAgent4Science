@@ -20,6 +20,7 @@ app.add_middleware(
 
 class RunRequest(BaseModel):
     hypothesis: str
+    information_cutoff_year: int | None = None
 
 
 @app.get("/api/health")
@@ -29,5 +30,8 @@ async def health() -> dict[str, str]:
 
 @app.post("/api/run")
 async def run(req: RunRequest) -> dict:
-    state = await run_pipeline(req.hypothesis)
+    state = await run_pipeline(
+        req.hypothesis,
+        information_cutoff_year=req.information_cutoff_year,
+    )
     return jsonable_encoder(state)

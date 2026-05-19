@@ -187,8 +187,9 @@ service in its own terminal.
 pip install -r requirements.txt
 uvicorn backend.api:app --reload --port 8000
 
-# Terminal 2 — frontend (port 3000)
+# Terminal 2 — frontend (port 3000, Node >=20.9.0)
 cd frontend
+corepack enable
 pnpm install
 pnpm dev
 ```
@@ -202,19 +203,27 @@ logs a warning to the browser console.
 To point the frontend at a different host, copy `frontend/.env.local.example`
 to `frontend/.env.local` and edit `NEXT_PUBLIC_API_BASE`.
 
-`OPENAI_API_KEY` is required for LLM-backed scoring. All 13 pipeline agents have
-production implementations that fall back to deterministic heuristics when no key
-is present, so the integrated demo runs without an API key.
+`OPENAI_API_KEY` is required for LLM-backed parsing, mutation, classification,
+and memo synthesis. The integrated demo still runs without an API key by using
+deterministic fallbacks. Historical runs can pass `information_cutoff_year` to
+the API so retrieval is restricted to pre-cutoff literature.
 
 ## 📦 Repository Status
 
 All 13 pipeline modules (Parser → Cartographer → parallel scorers → Score
 Aggregator → Mutator → Variant Rescorer → Pareto Curator → Ranker → Strategist)
-have production implementations backed by real OpenAlex and Semantic Scholar
-retrieval. Each module falls back to a calibrated heuristic when the OpenAI API
-is unavailable. A historical backtest harness (`scripts/backtest.py`) validates
-Spearman correlations against 2024 citation ground truth for 2018 papers across
-computer science, biology, and materials science.
+have production implementations backed by OpenAlex and Semantic Scholar
+retrieval. Retrieval returns a status report so partial/no-result source
+failures are visible. Variant re-scoring runs the quantitative scorer stack
+again, with the older delta heuristic retained only as a fallback. The
+historical backtest harness (`scripts/backtest.py`) uses a cutoff-aware pipeline
+and reports Spearman correlations against 2024 citation ground truth for 2018
+papers across computer science, biology, and materials science.
+
+For reproducible validation runs that should avoid live LLM calls, pass
+`--disable-llm` to `scripts/backtest.py`. The backtest scores original
+hypotheses by default for Spearman validation. Add `--with-variants` only when
+you explicitly want the much slower mutation-improvement study.
 
 ## 🗂️ Repository Layout
 
